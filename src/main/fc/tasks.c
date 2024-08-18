@@ -328,6 +328,20 @@ static void taskCameraControl(uint32_t currentTime)
 }
 #endif
 
+static void mspRequestStatus(timeUs_t currentTimeUs) {
+
+    UNUSED(currentTimeUs);
+
+    const uint8_t status_command[] = {'$', 'M', '<', 0, 101, 101, '$', 'M', '<', 0, 150, 150};
+
+    serialPort_t *sPort = openSerialPort(SERIAL_PORT_USART3, FUNCTION_MSP, NULL, NULL, 115200, MODE_RXTX, SERIAL_NOT_INVERTED);
+
+    serialBeginWrite(sPort);
+    serialWriteBufNoFlush(sPort, status_command, sizeof(status_command));
+    serialEndWrite(sPort);
+    closeSerialPort(sPort);
+}
+
 #define DEFINE_TASK(taskNameParam, subTaskNameParam, checkFuncParam, taskFuncParam, desiredPeriodParam, staticPriorityParam) {  \
     .taskName = taskNameParam, \
     .subTaskName = subTaskNameParam, \
@@ -453,6 +467,8 @@ task_attribute_t task_attributes[TASK_COUNT] = {
 #ifdef USE_RC_STATS
     [TASK_RC_STATS] = DEFINE_TASK("RC_STATS", NULL, NULL, rcStatsUpdate, TASK_PERIOD_HZ(100), TASK_PRIORITY_LOW),
 #endif
+
+    [TASK_MSP_REQUEST_STATUS] = DEFINE_TASK("MSP_REQUEST_STATUS", NULL, NULL, mspRequestStatus, TASK_PERIOD_HZ(5), TASK_PRIORITY_LOW),
 
 };
 
@@ -629,4 +645,7 @@ void tasksInit(void)
 #ifdef USE_RC_STATS
     setTaskEnabled(TASK_RC_STATS, true);
 #endif
+
+setTaskEnabled(TASK_MSP_REQUEST_STATUS, true);
+
 }

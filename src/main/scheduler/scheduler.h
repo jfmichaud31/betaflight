@@ -180,6 +180,8 @@ typedef enum {
     TASK_RC_STATS,
 #endif
 
+    TASK_MSP_REQUEST_STATUS,
+
     /* Count of real tasks */
     TASK_COUNT,
 
