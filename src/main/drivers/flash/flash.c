@@ -28,12 +28,12 @@
 
 #ifdef USE_FLASH_CHIP
 
-#include "drivers/flash/flash.h"
-#include "drivers/flash/flash_impl.h"
-#include "drivers/flash/flash_m25p16.h"
-#include "drivers/flash/flash_w25n.h"
-#include "drivers/flash/flash_w25q128fv.h"
-#include "drivers/flash/flash_w25m.h"
+#include "flash.h"
+#include "flash_impl.h"
+#include "flash_m25p16.h"
+#include "flash_w25n.h"
+#include "flash_w25q128fv.h"
+#include "flash_w25m.h"
 #include "drivers/bus_spi.h"
 #include "drivers/bus_quadspi.h"
 #include "drivers/bus_octospi.h"
@@ -556,7 +556,7 @@ static void flashConfigurePartitions(void)
 #endif
 }
 
-flashPartition_t *flashPartitionFindByType(flashPartitionType_e type)
+flashPartition_t *flashPartitionFindByType(uint8_t type)
 {
     for (int index = 0; index < FLASH_MAX_PARTITIONS; index++) {
         flashPartition_t *candidate = &flashPartitionTable.partitions[index];
